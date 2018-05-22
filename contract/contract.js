@@ -12,6 +12,7 @@ class DappItem {
         this.dappWebUrl = obj.dappWebUrl || '';
         this.developerAddress = obj.developerAddress || '';
         this.contractAddress = obj.contractAddress || '';
+        this.category = obj.category || '';
         this.timestamp = obj.timestamp || '';
         this.like = obj.like || [];
         this.comment = obj.comment || [];
@@ -24,6 +25,7 @@ class DappItem {
 
 class DappManager {
     constructor() {
+        LocalContractStorage.defineProperty(this, "contractAddressList");
         LocalContractStorage.defineMapProperty(this, "dappList", {
             parse: str => new DappItem(str),
             stringify: obj => obj.toString(),
@@ -31,12 +33,12 @@ class DappManager {
     }
 
     init() {
-
+        this.contractAddressList = [];
     }
 
     submit(dappItem) {
         var dappItemParsed = JSON.parse(dappItem);
-        var { dappName, developer, description, dappImageUrl, dappWebUrl, contractAddress } = dappItemParsed;
+        var { dappName, developer, description, dappImageUrl, dappWebUrl, contractAddress, category } = dappItemParsed;
 
         // error
         if (!dappName) throw new Error(`Argument Invalid: dappName is empty!`);
@@ -54,6 +56,7 @@ class DappManager {
         newDapp.dappImageUrl = dappImageUrl;
         newDapp.dappWebUrl = dappWebUrl;
         newDapp.contractAddress = contractAddress;
+        newDapp.category = category || "Others";
 
         // default
         newDapp.developerAddress = Blockchain.transaction.from;
@@ -62,14 +65,19 @@ class DappManager {
         newDapp.comment = [];
 
         // save dappItem
+        this.contractAddressList.push(contractAddress);
         this.dappList.set(contractAddress, newDapp);
         return newDapp;
     }
 
-    get(contractAddress) {
+    getFromContractAddress(contractAddress) {
         var dappItem = this.dappList.get(contractAddress);
         if (!dappItem) throw new Error(`Argument Invalid: dapp in contractAddress(${contractAddress}) doesn't exist!`);
         return dappItem;
+    }
+
+    getContractAddressList() {
+        return this.contractAddressList;
     }
 }
 
