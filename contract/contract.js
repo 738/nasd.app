@@ -6,7 +6,6 @@ class DappItem {
     constructor(str) {
         var obj = str ? JSON.parse(str) : {};
         this.dappName = obj.dappName || '';
-        this.developer = obj.developer || '';
         this.description = obj.description || '';
         this.dappWebUrl = obj.dappWebUrl || '';
         this.developerAddress = obj.developerAddress || '';
@@ -37,11 +36,10 @@ class DappManager {
 
     submit(dappItem) {
         var dappItemParsed = JSON.parse(dappItem);
-        var { dappName, developer, description, dappWebUrl, contractAddress, category } = dappItemParsed;
+        var { dappName, description, dappWebUrl, contractAddress, category } = dappItemParsed;
 
         // error
         if (!dappName) throw new Error(`Argument Invalid: dappName is empty!`);
-        if (!developer) throw new Error(`Argument Invalid: developer is empty!`);
         if (!description) throw new Error(`Argument Invalid: description is empty!`);
         if (!dappWebUrl) throw new Error(`Argument Invalid: dappWebUrl is empty!`);
         if (!contractAddress) throw new Error(`Argument Invalid: contractAddress is empty!`);
@@ -50,7 +48,6 @@ class DappManager {
         // args
         var newDapp = new DappItem();
         newDapp.dappName = dappName;
-        newDapp.developer = developer;
         newDapp.description = description;
         newDapp.dappWebUrl = dappWebUrl;
         newDapp.contractAddress = contractAddress;
