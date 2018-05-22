@@ -9,8 +9,8 @@ class NasDappMainComponent extends React.Component {
     return (
       <div>
         <HeaderAppBar />
-        <DappTable />
         <TextFieldForSearch />
+        <DappTable />
         <Footer />
       </div>
     );
