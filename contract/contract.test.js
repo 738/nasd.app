@@ -8,7 +8,7 @@ Blockchain.changeTransactionAfterGet = false;
 
 let contract = new DappManager();
 contract.init();
-contract.submit("{\"id\": \"123\", \"dappName\": \"Votestagram\", \"developer\": \"Jon Jee\", \"description\": \"this is voting platform\", \"dappImageUrl\": \"123123\", \"dappWebUrl\": \"456\", \"contractAddress\": \"n1qweqwe\"}");
+contract.submit("{\"dappName\": \"Votestagram\", \"developer\": \"Jon Jee\", \"description\": \"this is voting platform\", \"dappImageUrl\": \"123123\", \"dappWebUrl\": \"456\", \"contractAddress\": \"n1qweqwe\"}");
 
-console.log(contract.get("123"));
+console.log(contract.get("n1qweqwe"));
 

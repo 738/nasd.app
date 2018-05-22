@@ -5,7 +5,6 @@ let Blockchain = Stubs.Blockchain;
 class DappItem {
     constructor(str) {
         var obj = str ? JSON.parse(str) : {};
-        this.id = obj.id || 0;
         this.dappName = obj.dappName || '';
         this.developer = obj.developer || '';
         this.description = obj.description || '';
@@ -37,19 +36,18 @@ class DappManager {
 
     submit(dappItem) {
         var dappItemParsed = JSON.parse(dappItem);
-        var { id, dappName, developer, description, dappImageUrl, dappWebUrl, contractAddress } = dappItemParsed;
+        var { dappName, developer, description, dappImageUrl, dappWebUrl, contractAddress } = dappItemParsed;
 
         // error
-        if (this.dappList.get(id)) throw new Error(`Argument Invalid: id(${id}) is occupied!`);
         if (!dappName) throw new Error(`Argument Invalid: dappName is empty!`);
         if (!developer) throw new Error(`Argument Invalid: developer is empty!`);
         if (!description) throw new Error(`Argument Invalid: description is empty!`);
         if (!dappWebUrl) throw new Error(`Argument Invalid: dappWebUrl is empty!`);
         if (!contractAddress) throw new Error(`Argument Invalid: contractAddress is empty!`);
+        if (this.dappList.get(contractAddress)) throw new Error(`Argument Invalid: Dapp in contractAddress(${contractAddress}) is occupied!`);
 
         // args
         var newDapp = new DappItem();
-        newDapp.id = id;
         newDapp.dappName = dappName;
         newDapp.developer = developer;
         newDapp.description = description;
@@ -64,13 +62,13 @@ class DappManager {
         newDapp.comment = [];
 
         // save dappItem
-        this.dappList.set(id, newDapp);
+        this.dappList.set(contractAddress, newDapp);
         return newDapp;
     }
 
-    get(id) {
-        var dappItem = this.dappList.get(id);
-        if (!dappItem) throw new Error(`Argument Invalid: dapp in id(${id}) doesn't exist!`);
+    get(contractAddress) {
+        var dappItem = this.dappList.get(contractAddress);
+        if (!dappItem) throw new Error(`Argument Invalid: dapp in contractAddress(${contractAddress}) doesn't exist!`);
         return dappItem;
     }
 }
