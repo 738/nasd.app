@@ -89,6 +89,8 @@ class DappManager {
     }
 
     writeReview(contractAddress, review) {
+        // TODO: 같은 주소면 여러 번 리뷰 못쓰도록 막기
+        // TODO: 평점 5점 초과는 예외처리
         var reviewParsed = JSON.parse(review);
         var { rating, comment } = reviewParsed;
 
@@ -96,11 +98,28 @@ class DappManager {
         if (!rating) throw new Error(`Argument Invalid: rating of review is empty!`);
         if (!comment) throw new Error(`Argument Invalid: comment of review is empty!`);
 
-        reviewParsed['reviewerAddress'] = Blockchain.transaction.from;
+        reviewParsed.reviewerAddress = Blockchain.transaction.from;
         var dappItem = this.getFromContractAddress(contractAddress);
         dappItem.reviews.push(reviewParsed);
         this.dappList.set(contractAddress, dappItem);
         return reviewParsed;
+    }
+
+    likeOrUnlike(contractAddress) {
+        var dappItem = this.getFromContractAddress(contractAddress);
+        if (!dappItem) throw new Error(`Argument Invalid: dapp in contractAddress(${contractAddress}) doesn't exist!`);
+        var address = Blockchain.transaction.from;
+        // unlike
+        for (var i = 0; i < dappItem.likes.length; i++)
+            if (dappItem.likes[i] === address) {
+                dappItem.likes.splice(i, 1);
+                this.dappList.set(contractAddress, dappItem);
+                return dappItem.likes;
+            }
+        // like
+        dappItem.likes.push(address);
+        this.dappList.set(contractAddress, dappItem);
+        return dappItem.likes;
     }
 }
 

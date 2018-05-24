@@ -17,3 +17,9 @@ contract.getContractAddressList().forEach(address => {
 
 console.log(contract.writeReview('n1qweqwe22', "{\"rating\": \"5\", \"comment\": \"very good dapp\"}"));
 console.log(contract.getFromContractAddress('n1qweqwe22'));
+
+console.log(contract.likeOrUnlike('n1qweqwe22'));
+console.log(contract.likeOrUnlike('n1qweqwe22'));
+console.log(contract.likeOrUnlike('n1qweqwe22'));
+console.log(contract.getFromContractAddress('n1qweqwe22'));
+console.log(contract.getContractAddressList());
