@@ -12,8 +12,21 @@ class DappItem {
         this.contractAddress = obj.contractAddress || '';
         this.category = obj.category || '';
         this.timestamp = obj.timestamp || '';
-        this.like = obj.like || [];
-        this.comment = obj.comment || [];
+        this.reviews = obj.review || [];
+        this.likes = obj.like || [];
+    }
+
+    toString() {
+        return JSON.stringify(this);
+    }
+}
+
+class Review {
+    constructor(str) {
+        var obj = str ? JSON.parse(str) : {};
+        this.reviewerAddress = obj.reviewerAddress || '';
+        this.rating = obj.rating || 0;
+        this.comment = obj.comment || '';
     }
 
     toString() {
@@ -56,8 +69,8 @@ class DappManager {
         // default
         newDapp.developerAddress = Blockchain.transaction.from;
         newDapp.timestamp = new Date();
-        newDapp.like = [];
-        newDapp.comment = [];
+        newDapp.reviews = [];
+        newDapp.likes = [];
 
         // save dappItem
         this.contractAddressList.push(contractAddress);
@@ -73,6 +86,21 @@ class DappManager {
 
     getContractAddressList() {
         return this.contractAddressList;
+    }
+
+    writeReview(contractAddress, review) {
+        var reviewParsed = JSON.parse(review);
+        var { rating, comment } = reviewParsed;
+
+        // error
+        if (!rating) throw new Error(`Argument Invalid: rating of review is empty!`);
+        if (!comment) throw new Error(`Argument Invalid: comment of review is empty!`);
+
+        reviewParsed['reviewerAddress'] = Blockchain.transaction.from;
+        var dappItem = this.getFromContractAddress(contractAddress);
+        dappItem.reviews.push(reviewParsed);
+        this.dappList.set(contractAddress, dappItem);
+        return reviewParsed;
     }
 }
 

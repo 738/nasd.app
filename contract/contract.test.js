@@ -15,3 +15,5 @@ contract.getContractAddressList().forEach(address => {
     console.log(contract.getFromContractAddress(address));
 });
 
+console.log(contract.writeReview('n1qweqwe22', "{\"rating\": \"5\", \"comment\": \"very good dapp\"}"));
+console.log(contract.getFromContractAddress('n1qweqwe22'));
